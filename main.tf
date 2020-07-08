@@ -16,6 +16,16 @@ variable "policy" {
   default     = ""
 }
 
+variable "lifecycle_enabled" {
+  description = "Whether or not a expiring object lifecycle is enabled for the bucket"
+  default     = false
+}
+
+variable "lifecycle_days" {
+  description = "The number of days an object will have between creation and expiring, if lifecycle is enabled"
+  default     = 30
+}
+
 resource "aws_s3_bucket" "secure_bucket" {
   region = "${var.region}"
 
@@ -31,6 +41,15 @@ resource "aws_s3_bucket" "secure_bucket" {
       apply_server_side_encryption_by_default {
         sse_algorithm = "AES256"
       }
+    }
+  }
+
+  lifecycle_rule {
+    id      = "default-expiry"
+    enabled = "${var.lifecycle_enabled}"
+
+    expiration {
+      days = "${var.lifecycle_days}"
     }
   }
 }
