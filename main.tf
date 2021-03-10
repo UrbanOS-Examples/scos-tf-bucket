@@ -57,6 +57,14 @@ resource "aws_s3_bucket_public_access_block" "secure_bucket" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_policy" "secure_bucket" {
+  bucket = aws_s3_bucket.secure_bucket.id
+
+  policy = data.aws_iam_policy_document.secure_bucket.json
+
+  depends_on = [ aws_s3_bucket_public_access_block.secure_bucket ]
+}
+
 data "aws_iam_policy_document" "secure_bucket" {
   override_json = var.policy
 
@@ -85,12 +93,6 @@ data "aws_iam_policy_document" "secure_bucket" {
       values   = ["false"]
     }
   }
-}
-
-resource "aws_s3_bucket_policy" "secure_bucket" {
-  bucket = aws_s3_bucket.secure_bucket.id
-
-  policy = data.aws_iam_policy_document.secure_bucket.json
 }
 
 output "bucket_arn" {
