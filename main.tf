@@ -2,10 +2,6 @@ variable "name" {
   description = "The name of the bucket to create"
 }
 
-variable "region" {
-  description = "The region in which to create the bucket"
-}
-
 variable "versioning" {
   description = "Whether or not to enable versioning"
   default     = false
@@ -27,8 +23,6 @@ variable "lifecycle_days" {
 }
 
 resource "aws_s3_bucket" "secure_bucket" {
-  region = var.region
-
   bucket = var.name
   acl    = "private"
 
