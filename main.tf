@@ -17,6 +17,11 @@ variable "lifecycle_enabled" {
   default     = false
 }
 
+variable "lifecycle_prefix" {
+  description = "Prefix with which to apply lifecycle rule (if enabled). Default value (empty string) applies to entire bucket https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-configuration-examples.html#lifecycle-config-ex1"
+  default     = ""
+}
+
 variable "lifecycle_days" {
   description = "The number of days an object will have between creation and expiring, if lifecycle is enabled"
   default     = 30
@@ -41,6 +46,7 @@ resource "aws_s3_bucket" "secure_bucket" {
   lifecycle_rule {
     id      = "default-expiry"
     enabled = var.lifecycle_enabled
+    prefix  = var.lifecycle_prefix
 
     expiration {
       days = var.lifecycle_days
